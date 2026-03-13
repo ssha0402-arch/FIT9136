@@ -1,0 +1,65 @@
+# Python f-string 对齐速记 (Alignment Cheat Sheet)
+
+## 左对齐 (Left Alignment)
+- 语法 Syntax: `{variable:<width}`
+- 示例 Example: `f"{name:<10}"`
+- 效果 Effect: 左对齐字符串在 width 字符宽字段中，右侧填充空格。
+
+## 右对齐 (Right Alignment)
+- 语法 Syntax: `{variable:>width}`
+- 示例 Example: `f"{price:>10}"`
+- 效果 Effect: 右对齐字符串在 width 字符宽字段中，左侧填充空格。
+
+## 居中对齐 (Center Alignment)
+- 语法 Syntax: `{variable:^width}`
+- 示例 Example: `f"{title:^20}"`
+- 效果 Effect: 居中字符串在 width 字符宽字段中，两侧填充空格。
+
+## 用例 (Use Case)
+- 表格输出: `print(f"{name:<10} | {price}")` 通过确保列宽一致使 `|` 垂直对齐。
+
+# Python f-string 完整用法总结 (Complete f-string Usage Summary)
+
+## 基本插值 (Basic Interpolation)
+- 语法 Syntax: `f"{variable}"`
+- 示例 Example: `f"Hello, {name}!"`
+- 效果 Effect: 直接插入变量值。
+
+## 表达式 (Expressions)
+- 语法 Syntax: `f"{expression}"`
+- 示例 Example: `f"{x + y}"`, `f"{len(list)}"`
+- 效果 Effect: 计算并插入表达式的结果。
+
+## 格式化 (Formatting)
+- 语法 Syntax: `f"{value:format_spec}"`
+- 示例 Example: `f"{pi:.2f}"` (保留两位小数)
+- 效果 Effect: 应用格式规范，如精度、对齐等。
+
+### 常用格式规范 (Common Format Specs)
+- **宽度 Width**: `f"{value:10}"` - 最小宽度 10。
+- **对齐 Alignment**:
+  - 左对齐: `f"{value:<10}"`
+  - 右对齐: `f"{value:>10}"`
+  - 居中: `f"{value:^10}"`
+- **精度 Precision**: `f"{value:.2f}"` - 浮点数保留 2 位小数。
+- **类型 Types**:
+  - 整数: `d` (十进制), `x` (十六进制), `b` (二进制)
+  - 浮点: `f` (固定点), `e` (科学计数), `g` (通用)
+  - 字符串: `s`
+
+## 多行 f-string (Multiline f-strings)
+- 示例 Example:
+  ```
+  f"""Line 1: {var1}
+  Line 2: {var2}"""
+  ```
+- 效果 Effect: 支持多行字符串。
+
+## 嵌套引号和转义 (Nested Quotes and Escaping)
+- 示例 Example: `f'Outer single, inner "double"'` 或 `f"Outer double, inner 'single'"`
+- 转义: 使用 `\` 如 `f"{{literal braces}}"` 显示 `{}`。
+
+## 注意事项 (Notes)
+- f-string 在运行时求值，性能可能不如其他方法。
+- 适用于 Python 3.6+。
+- 避免在 f-string 中使用复杂表达式以保持可读性。
