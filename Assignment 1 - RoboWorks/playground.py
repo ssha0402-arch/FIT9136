@@ -1,2 +1,2 @@
 import math
-A = math.e**math.log(10)
+print(f"{math.pi:.2f}")
