@@ -63,3 +63,110 @@
 - f-string 在运行时求值，性能可能不如其他方法。
 - 适用于 Python 3.6+。
 - 避免在 f-string 中使用复杂表达式以保持可读性。
+
+# 创建布尔值
+a = True
+b = False
+
+# 比较运算产生 bool
+x = 5
+print(x > 3)   # True
+print(x == 2)  # False
+
+# bool() 类型转换
+print(bool(1))     # True
+print(bool(0))     # False
+print(bool(""))    # False
+print(bool("hi"))  # True
+
+# 逻辑运算
+print(True and False)  # False
+print(True or False)   # True
+print(not True)        # False
+
+# bool 本质是 int
+print(True + True)  # 2
+print(False + True) # 1
+
+
+# 基本 if
+x = 10
+
+if x > 5:
+    print("big")
+
+# if else
+x = 3
+
+if x > 5:
+    print("big")
+else:
+    print("small")
+
+# if elif else
+score = 75
+
+if score >= 90:
+    print("A")
+elif score >= 60:
+    print("Pass")
+else:
+    print("Fail")
+
+# 多条件判断
+age = 20
+student = True
+
+if age > 18 and student:
+    print("discount")
+
+# 三元表达式
+x = 10
+result = "big" if x > 5 else "small"
+
+
+# 基本 while 循环
+i = 1
+
+while i <= 5:
+    print(i)
+    i += 1
+
+
+# 无限循环
+while True:
+    print("running")
+
+
+# break 终止循环
+i = 1
+
+while True:
+    print(i)
+
+    if i == 5:
+        break
+
+    i += 1
+
+
+# continue 跳过一次循环
+i = 0
+
+while i < 5:
+    i += 1
+
+    if i == 3:
+        continue
+
+    print(i)
+
+
+# while + input
+password = ""
+
+while password != "1234":
+    password = input("Enter password: ")
+
+print("Access granted")
+

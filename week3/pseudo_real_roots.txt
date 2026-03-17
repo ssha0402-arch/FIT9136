@@ -1,0 +1,32 @@
+Please write your pseudocode here.
+
+import math
+
+a = 
+v = 
+x_int = ''
+x_fin = ''
+root_num = ''
+
+A = a/2
+B = v
+C = x_int - x_fin
+
+X = ''
+X_1 = ''
+X_2 = ''
+
+Delta = B**2-4*A*C
+
+if Delta > 0:
+    X_1 = (-B+math.sqrt(B**2-4*A*C))/(2*A)
+    X_2 = (-B-math.sqrt(B**2-4*A*C))/(2*A)
+    root_num = 2
+elif Delta ==0:
+    X_1 = -B/(2*A)
+    X_2 = X_1
+    root_num = 1
+elif Delta <0:
+    X_1 = "no real root"
+    X_2 = X_1
+    root_num = 0
