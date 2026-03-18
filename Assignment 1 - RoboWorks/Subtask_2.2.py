@@ -3,6 +3,7 @@ part_name  = ["motor", "sensor", "frame", "cpu"]
 part_stock = [5, 7, 10, 0]
 model = [3, 2, 3, 1]
 check = []
+enough = 0
 
 # set counter
 i = 0
@@ -17,6 +18,8 @@ while i < len(part_name):
 
 # check if 0 exist
 if 0 in check:
-    print("False")
+    enough = False
 else:
-    print("True")
+    enough = True
+
+print (enough)
