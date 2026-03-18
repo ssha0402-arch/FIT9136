@@ -23,12 +23,13 @@ seq_model = []
 for model in models.keys():
     seq_model.append(model)
 
-model_coast = {
+model_cost_amount = {
     "R1": 0,
     "R2": 0,
     "R3": 0,
     "R4": 0
 }
+
 
 # calculate model cost
 for model, req in models.items():
@@ -161,7 +162,7 @@ for order in unavl_order:
 total_cost = 0
 i = 0 # reset counter
 for model, model_num in cons_unit.items():
-    for model_name, model_cost in model_coast.items():
+    for model_name, model_cost in model_cost_amount.items():
         if model == model_name:
             total_cost += float(model_cost) * model_num
 
@@ -173,7 +174,7 @@ for model, model_num in cons_unit.items():
 # print("Available orders:", avl_order)    
 # print("Unavailable orders:", unavl_order)
 # print("Remaining stock:", part_stock)
-# print("Model cost:", model_coast)
+# print("Model cost:", model_cost_amount)
 # print("Total cost:", total_cost)
 
 
