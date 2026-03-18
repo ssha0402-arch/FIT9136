@@ -1,2 +1,2 @@
-import math
-print(f"{math.pi:.2f}")
+num = 10.20 * 7
+print(num)
