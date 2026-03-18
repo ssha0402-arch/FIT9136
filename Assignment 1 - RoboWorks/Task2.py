@@ -1,5 +1,5 @@
 # orgain data
-from xml.parsers.expat import model
+
 
 
 part_name = ["servo", "lidar", "motor", "sensor", "gyroscope", "gearbox", "regulator", "controller"]
