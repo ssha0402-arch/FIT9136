@@ -38,7 +38,7 @@ for model, req in models.items():
     while i < len(part_name):
         model_cost += req[i] * part_cost[i]
         i += 1
-    model_coast[model] = f"{model_cost:.2f}" # set float to 2
+    model_cost_amount[model] = f"{model_cost:.2f}" # set float to 2
 
 #list for order
 queue = [
