@@ -60,6 +60,9 @@ for order in queue:
     temp_stock = part_stock         # set a temp list
     consed_num = 0 
     i = 0                           # set counter
+
+# there is a new way in task3 
+
     while i < len(model_req):                           # try to constrct full order
         check = 1
         if part_stock[i] >= model_req[i] * model_num:
