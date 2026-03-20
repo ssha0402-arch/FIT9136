@@ -10,4 +10,5 @@ print("Product Inventory:")
 print("-" * 20)
 
 for name, price in inventory.items():
-    print(f"{name:<10} | {price}")
+    i = int(10-len(name))
+    print (name + " "*i+ "|$" + price)
