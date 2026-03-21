@@ -53,89 +53,96 @@ queue = [
 avl_order = []
 unavl_order = []
 
-for order in queue: 
-    model_name = order[0]           # KEY
+# a new way from task3
+
+for order in queue:
+    model_name = order[0]
     model_num = order[1]
-    model_req = models[model_name]  # LIST
-    temp_stock = part_stock         # set a temp list
     consed_num = 0 
-    i = 0                           # set counter
-
-# there is a new way in task3 
-
-    while i < len(model_req):                           # try to constrct full order
+    unconsed_num = 0
+    part_req = models[model_name]
+    try_num = int(model_num)
+    while try_num != 0:
+        temp_stock = part_stock.copy()                      # built a temp 
         check = 1
-        if part_stock[i] >= model_req[i] * model_num:
-            check = 1
-            i += 1
-        else:
-            check = 0
-            i = 0
-            break
-    if check == 1:
-        consed_num = model_num
-    else:                                               # try to construct partial order
-        try_num = model_num - 1
-        while try_num > 0:
-            check = 1
-            i = 0
-            while i < len(model_req):
-                if part_stock[i] >= model_req[i] * try_num:
-                    check = 1
-                    i += 1
-                else:
-                    check = 0
-                    i = 0
-                    break
-            if check == 1:
-                consed_num = try_num
-                i = 0
-                break
-            else:
-                try_num -= 1
-    if consed_num >= 1:
+        model_cost = 0
         i = 0
-        while i < len(model_req):
-            part_stock[i] -= model_req[i] * consed_num  # fix test 2.5
-            i += 1
-#        part_stock = temp_stock                         # fix test 2.5
-        avl_order.append((model_name, consed_num))      # update available order with consed_num
-        unavl_order.append((model_name, model_num - consed_num)) # update unavailable order with remaining number
-    else:
-#        temp_stock = part_stock                         # fix test 2.5
-        unavl_order.append((order))                     # update unavailable order
+        while i < len(part_req):
+            if temp_stock[i] >= part_req[i] * try_num:
+                temp_stock[i] -= part_req[i] * try_num
+                model_cost += part_cost[i] * part_req[i] * try_num
+                i +=1
+                check = 1
+            else:
+                temp_stock = part_stock.copy()
+                check = 0
+                model_cost = 0
+                break
+        if check == 1:
+            consed_num = int(try_num)
+            unconsed_num = int(model_num) - int(try_num)
+            avl_order.append((model_name, consed_num))      # update available order with consed_num
+            unavl_order.append((model_name, unconsed_num))  # update unavailable order with remaining number
+            part_stock[:] = temp_stock                      # fix 2.5
+            break
+        elif check == 0 :
+            try_num -=1
+    if try_num == 0:
+        unavl_order.append((model_name, model_num))         # update unavailable order with remaining number
+
+# reinstructed 
 
 
 
-# for order in queue:
-#     i= 0                            # set counter
-#     consed_num = 0                  # set conter for constrcted number
+# for order in queue: 
+#     model_name = order[0]           # KEY
+#     model_num = order[1]
+#     model_req = models[model_name]  # LIST
 #     temp_stock = part_stock         # set a temp list
-#     model_name = order[0]           
-#     model_num = order[1]            
-#     model_req = models[model_name]  
-#     while i < len(model_req) :
-#         if part_stock[i] >= model_req[i] * model_num:   # try to constrct full order
-#             temp_stock[i] -= model_req[i] * model_num
+#     consed_num = 0 
+#     i = 0                           # set counter
+#     while i < len(model_req):                           # try to constrct full order
+#         check = 1
+#         if part_stock[i] >= model_req[i] * model_num:
+#             check = 1
 #             i += 1
-#             consed_num += model_num
-#         else:                                           # try to construct partial order
-#             try_num = model_num -1
-#             while try_num > 0:
+#         else:
+#             check = 0
+#             i = 0
+#             break
+#     if check == 1:
+#         consed_num = model_num
+#     else:                                               # try to construct partial order
+#         try_num = model_num - 1
+#         while try_num > 0:
+#             check = 1
+#             i = 0
+#             while i < len(model_req):
 #                 if part_stock[i] >= model_req[i] * try_num:
-#                     temp_stock[i] -= model_req[i] * try_num
+#                     check = 1
 #                     i += 1
-#                     consed_num += try_num
-#                     break
 #                 else:
-#                     try_num -= 1
-#             i += 1
+#                     check = 0
+#                     i = 0
+#                     break
+#             if check == 1:
+#                 consed_num = try_num
+#                 i = 0
+#                 break
+#             else:
+#                 try_num -= 1
 #     if consed_num >= 1:
-#         part_stock = temp_stock     # update stock
-#         avl_order.append(order)     # update available order
+#         i = 0
+#         while i < len(model_req):
+#             part_stock[i] -= model_req[i] * consed_num  # fix test 2.5
+#             i += 1
+# #        part_stock = temp_stock                         # fix test 2.5
+#         avl_order.append((model_name, consed_num))      # update available order with consed_num
+#         unavl_order.append((model_name, model_num - consed_num)) # update unavailable order with remaining number
 #     else:
-#         temp_stock = []             # reset temp stock
-#         unavl_order.append(order)   # update unavailable order
+# #        temp_stock = part_stock                         # fix test 2.5
+#         unavl_order.append((order))                     # update unavailable order
+
 
 
 # dict for consumption unit
@@ -170,9 +177,6 @@ for model, model_num in cons_unit.items():
             total_cost += float(model_cost) * model_num
 
 
-
-
-
 # temp check
 # print("Available orders:", avl_order)    
 # print("Unavailable orders:", unavl_order)
@@ -181,19 +185,18 @@ for model, model_num in cons_unit.items():
 # print("Total cost:", total_cost)
 
 
+# output
 
 print ("Constructed units")
 for model, model_num in cons_unit.items():
     print( model +":" , str(int(model_num)))
 
 print ("\nTotal cost: $"+ f"{total_cost:.2f}"+"\n\nBackorder") #format total cost float to 2
-
 for model, model_num in uncons_unit.items():
     print( model+ ": "+ f"{model_num}" )
 
 
 print("\nInventory")
-
 i = 0 # reset counter
 while i < len(part_name):
     print(part_name[i] + ": " + str(part_stock[i]))

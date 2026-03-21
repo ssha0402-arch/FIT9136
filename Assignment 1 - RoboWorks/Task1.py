@@ -16,7 +16,7 @@ print("Welcome to the RoboWorks Quote Calculator.\n\nFor each product below, ple
 #num_frame = int(input("frame: "))  
 #num_cpu = int(input("cpu: "))
 
-# add unmer into list
+# add number into list
 for name in product_name:
     num = int(input(name + ": "))
     product_num.append(num)

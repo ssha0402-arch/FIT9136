@@ -103,15 +103,15 @@ def process_order(model, count, inventory, catalog, models):
     part_req = models[model]
     while try_num != 0:
         check = 1
-        # model_cost = 0
+        model_cost = 0
         for part_req_name , part_req_num in part_req.items():
             if temp_stock[part_req_name] >= part_req[part_req_name] * try_num:
                 temp_stock[part_req_name] -= part_req[part_req_name] * try_num
-                # model_cost += catalog[part_req_name] * try_num
+                model_cost += catalog[part_req_name] * part_req_num * try_num
                 check = 1
             else:
                 check = 0
-                # model_cost = 0
+                model_cost = 0
                 break
         if check == 1:
             consed_num = try_num
@@ -120,9 +120,7 @@ def process_order(model, count, inventory, catalog, models):
         elif check == 0 :
             try_num -=1
             check = 1
-    # model_cost = f"{model_cost:.2f}"
-    # model_cost = f"{(get_model_cost(model, catalog, models) * try_num):.2f}"
-    model_cost = get_model_cost(model, catalog, models) * try_num
+    model_cost = float(f"{model_cost:.2f}")
     return (consed_num,unconsed_num,model_cost)
 
 # print (process_order("R1", 7, inventory, PRICE_CATALOG, MODELS))
