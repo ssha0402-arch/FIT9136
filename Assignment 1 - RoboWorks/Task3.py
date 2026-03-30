@@ -36,52 +36,51 @@ inventory = {
 ################################
 
 def get_model_cost(model, catalog, models):
+    """ return the cost of "model" by the request from "models" and price from "catalog" """
     model_cost = 0
     part_req = models[model]
     for part_name, part_num in part_req.items():
-        #print (part_name,part_num)
         model_cost += float(f"{(catalog[part_name] * part_num):.2f}")
     return (model_cost)
 
 def can_build_one(model, inventory, models) :
-    check_list = []
+    """ return True if the stock of parts in "inventory" is able to build "model", 
+        or False if unable"""
+    check_list = []                                 # list of flag to record if a part is able
     part_req = models[model]
     for part_name, part_num in part_req.items():
         if part_num <= inventory[part_name]:
-            check_list.append(1)
+            check_list.append(1)                    # mark as able
         else:
-            check_list.append(0)
-    if 0 in check_list:
-        return (False)
+            check_list.append(0)                    # mark as unable
+    if 0 in check_list:                             # if any part marked unable
+        return (False)                              
     else:
         return (True)
     
 def build_one(model, inventory, catalog, models) :
-    check_list = []
-    check = True
+    """ if parts in "inventory" are able to build a "model", update "inventory" and return cost, 
+        if unable return 0.00 """
+    check_list = []                                 # list of flag to record if a part is able
     part_req = models[model]
     for part_name, part_num in part_req.items():
         if part_num <= inventory[part_name]:
-            check_list.append(1)
+            check_list.append(1)                    # mark as able
         else:
-            check_list.append(0)
-    if 0 in check_list:
-        check = False 
-        #return ("$"+0.00)
+            check_list.append(0)                    # mark as unable
+    if 0 in check_list:                             # if any part marked unable 
         return (0.00)
-    model_cost = 0
+    
+    # if avriable to build
+    model_cost = 0                                  
     part_req = models[model]
     for part_name, part_num in part_req.items():
         model_cost += float(f"{(catalog[part_name] * part_num):.2f}")
-    
-    if check:
-        for part_name, part_num in part_req.items():
-            inventory[part_name] -= part_num
-            #cost = float(model_cost)
-        #return("$" + str(model_cost))
-        return (model_cost)
+        inventory[part_name] -= part_num                                # update inventory
+    return (model_cost)
 
 def apply_discount(total):
+    """ return the price after discounted """
     sale_amount = 0.00
     total = float(total)
     if total > 1500:
@@ -96,30 +95,34 @@ def apply_discount(total):
     return (sale_amount)
 
 def process_order(model, count, inventory, catalog, models):
-    temp_stock = inventory         # set a temp list
+    """ try to built "model" as more as possible, 
+        update "inventory", 
+        return the number of built unit, the number of unit on backorder, and total cost"""
     consed_num = 0 
     unconsed_num = 0
     try_num = int(count)
     part_req = models[model]
-    while try_num != 0:
-        check = 1
+    check = True                            # mark of if_can_build_or_not
+    while check:
+        temp_stock = inventory.copy()           # set a temp 
         model_cost = 0
         for part_req_name , part_req_num in part_req.items():
             if temp_stock[part_req_name] >= part_req[part_req_name] * try_num:
                 temp_stock[part_req_name] -= part_req[part_req_name] * try_num
                 model_cost += catalog[part_req_name] * part_req_num * try_num
-                check = 1
+                check = True                        # mark as able
             else:
-                check = 0
+                check = False                       # mark as unable
                 model_cost = 0
                 break
-        if check == 1:
+        if check :                              # check if can build
             consed_num = try_num
             unconsed_num = int(count) - int(try_num)
+            inventory.update(temp_stock)        # update inventory
             break
-        elif check == 0 :
-            try_num -=1
-            check = 1
+        else :                       
+            try_num -=1                         # try partial 
+            check = True
     model_cost = float(f"{model_cost:.2f}")
     return (consed_num,unconsed_num,model_cost)
 
@@ -129,21 +132,20 @@ def process_order(model, count, inventory, catalog, models):
 ########################################
 
 
-while True:
-    temp_inventory = inventory # set a temp catalog
-    print ("1) Show models and costs\n2) Attempt order\n3) Show inventory\n0) Exit\n")
+while True:                                                                                                 # keep working
+
+    print ("1) Show models and costs\n2) Attempt order\n3) Show inventory\n0) Exit\n")                      # menu
     choice = input ("Please enter an integer between (0-3): ")
 
-    if str(choice) == str(1):
+    if str(choice) == str(1):                                                                               # Show models and costs
         for model_name, model_req in MODELS.items():
             print(model_name + ": $" + str(f"{get_model_cost(model_name, PRICE_CATALOG, MODELS):.2f}"))
         print("")
 
-    elif str(choice) == str(2):
+    elif str(choice) == str(2):                                                                             # Attempt order
         model_name = input("Please enter a model number: ")
-        hint = "Please enter the number of " + model_name + " units you would like: "
-        count = input(hint)
-        cons_result = process_order(model_name, count, temp_inventory, PRICE_CATALOG, MODELS)
+        count = input("Please enter the number of " + model_name + " units you would like: ")
+        cons_result = process_order(model_name, count, inventory, PRICE_CATALOG, MODELS)
         discount = apply_discount(cons_result[2])
         print ("\nAttempting to order models...\n\n" + model_name + " order details.")
         print ("Units built: " + str(cons_result[0]))
@@ -152,14 +154,14 @@ while True:
         print ("Discount (dollars): $" + str(f"{(float(cons_result[2])-discount):.2f}"))
         print ("Total: $" + str(discount)+"\n")
 
-    elif str(choice) == str(3):   
+    elif str(choice) == str(3):                                                                             # Show inventory
         print ("Current inventory:\n")
-        for part_name, part_num in temp_inventory.items():
+        for part_name, part_num in inventory.items():
             print (part_name + ": " + str(part_num))
         print("")
 
-    elif str(choice) == str(0):
-        break
+    elif str(choice) == str(0):                                                                             # exit
+        break                                                                                               
 
 
     

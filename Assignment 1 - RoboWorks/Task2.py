@@ -10,11 +10,11 @@ models = {
     "R3": [3, 6, 2, 7, 7, 4, 4, 4],
     "R4": [1, 6, 3, 6, 4, 5, 2, 7]
 }
-
 # fix test 2.10
 seq_model = []
 for model in models.keys():
     seq_model.append(model)
+
 
 model_cost_amount = {
     "R1": 0,
@@ -28,7 +28,7 @@ for model, req in models.items():
     model_cost = 0
     for i in range(len(part_name)):
         model_cost += req[i] * part_cost[i]
-    model_cost_amount[model] = f"{model_cost:.2f}" # set float to 2
+    model_cost_amount[model] = f"{model_cost:.2f}" 
 
 #list for order
 queue = [
@@ -40,41 +40,45 @@ queue = [
     ("R4",2),
     ("R2",3)
 ]
-avl_order = []
-unavl_order = []
+able_order = []
+backorder = []
 
+# process order
 for order in queue:
     model_name = order[0]
     model_num = order[1]
     consed_num = 0 
     unconsed_num = 0
-    part_req = models[model_name]
     try_num = int(model_num)
+    part_req = models[model_name]
     while try_num != 0:
-        temp_stock = part_stock.copy()
-        check = 1
+        temp_stock = part_stock.copy()                              # set a temp 
+        check = True                                                # mark of if_can_build_or_not
         model_cost = 0
         for i in range(len(part_req)):
             if temp_stock[i] >= part_req[i] * try_num:
                 temp_stock[i] -= part_req[i] * try_num
                 model_cost += part_cost[i] * part_req[i] * try_num
-                check = 1
+                check = True                                           # mark as able
             else:
-                temp_stock = part_stock.copy()
-                check = 0
+                check = False                                           # mark as unable
                 model_cost = 0
+                try_num -=1                                         # try to build partial order  
                 break
-        if check == 1:
+        if check:                                              # if all parts are able
             consed_num = int(try_num)
             unconsed_num = int(model_num) - int(try_num)
-            avl_order.append((model_name, consed_num))      # update available order with consed_num
-            unavl_order.append((model_name, unconsed_num)) # update unavailable order with remaining number
-            part_stock[:] = temp_stock #fix 2.5
+            able_order.append((model_name, consed_num))              # update able order with consed_num
+            backorder.append((model_name, unconsed_num))          # update unable order with remaining number
+            part_stock[:] = temp_stock                              # update stock
             break
-        elif check == 0 :
-            try_num -=1
-    if try_num == 0:
-        unavl_order.append((model_name, model_num))
+            
+    if try_num == 0:                                                # if total not able
+        backorder.append((model_name, model_num))
+
+
+
+
 
 # dict for consumption unit
 cons_unit = {}
@@ -82,7 +86,7 @@ for model in seq_model:
     cons_unit[model] = 0
 # fix test 2.10
 
-for order in avl_order:
+for order in able_order:
     model_name = order[0]
     model_num = order[1]
     cons_unit[model_name] += model_num
@@ -93,10 +97,13 @@ for model in seq_model:
     uncons_unit[model] = 0
 # fix test 2.10
 
-for order in unavl_order:
+for order in backorder:
     model_name = order[0]
     model_num = order[1]
     uncons_unit[model_name] += model_num
+
+
+
 
 
 # calculate total cost
@@ -117,7 +124,7 @@ print ("Constructed units")
 for model, model_num in cons_unit.items():
     print( model +":" , str(int(model_num)))
 
-print ("\nTotal cost: $"+ f"{total_cost:.2f}"+"\n\nBackorder") #format total cost float to 2
+print ("\nTotal cost: $"+ f"{total_cost:.2f}"+"\n\nBackorder") 
 for model, model_num in uncons_unit.items():
     print( model+ ": "+ f"{model_num}" )
 
