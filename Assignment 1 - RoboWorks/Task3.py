@@ -123,10 +123,6 @@ def process_order(model, count, inventory, catalog, models):
     model_cost = float(f"{model_cost:.2f}")
     return (consed_num,unconsed_num,model_cost)
 
-# print (process_order("R1", 7, inventory, PRICE_CATALOG, MODELS))
-
-
-
 
 ########################################
 # Place your CLI code and methods here #
@@ -139,7 +135,6 @@ while True:
     choice = input ("Please enter an integer between (0-3): ")
 
     if str(choice) == str(1):
-        # print("11111")
         for model_name, model_req in MODELS.items():
             print(model_name + ": $" + str(f"{get_model_cost(model_name, PRICE_CATALOG, MODELS):.2f}"))
         print("")

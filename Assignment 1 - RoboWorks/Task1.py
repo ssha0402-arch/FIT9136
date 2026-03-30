@@ -14,11 +14,8 @@ for name in product_name:
 
 # calculate total amount
 total_amount = 0    
-i = 0               
-while i < len(product_name):
+for i in range(len(product_name)):
     total_amount += product_price[i] * product_num[i]
-    i += 1
-
 
 # calculate discount
 if total_amount > 1500:
@@ -38,10 +35,9 @@ discount_amount = total_amount * discount
 
 # print product name with price
 print("\nPlease see your quote below.\n")
-i = 0               # reset conter
-while i < len(product_name):
+for i in range(len(product_name)):
     print(f"{product_name[i]}: {product_num[i]} x ${product_price[i]:.2f} = ${product_price[i] * product_num[i]:.2f}")
-    i += 1
+
 
 print("\nSubtotal: $"+str(f"{total_amount:.2f}"))
 print("Discount: $"+str(f"{discount_amount:.2f}"))
