@@ -41,9 +41,7 @@ def get_model_cost(model: str, catalog: dict, models: dict) -> float:
     """
 
     # check if input legal 
-    if type(catalog) != dict or type(models) != dict:
-        return (0.00)
-    if type(model) != str or model not in models.keys():
+    if  model not in models.keys():
         return (0.00)
     
     # process def
@@ -61,9 +59,7 @@ def can_build_one(model: str, inventory: dict, models: dict) -> bool:
     """
 
     # check if input legal
-    if type(inventory) != dict or type(models) != dict:
-        return (False)
-    if type(model) != str or model not in models.keys():
+    if  model not in models.keys():
         return (False)
 
     # process def    
@@ -87,9 +83,7 @@ def build_one(model: str, inventory: dict, catalog: dict, models: dict) -> float
     """
 
     # check if input legal 
-    if type(inventory) != dict or type(catalog) != dict or type(models) != dict:
-        return (0.00)
-    if type(model) != str or model not in models.keys():
+    if  model not in models.keys():
         return (0.00)
        
     # process def
@@ -116,10 +110,6 @@ def apply_discount(total: float) -> float:
     return the price after discounted
     """
 
-    # check if input legal 
-    if type(total) != float and type(total) != int :
-        return(0.00)
-    
     # process def
     sale_amount = 0.00
     total = float(total)
@@ -143,9 +133,7 @@ def process_order(model: str, count: int, inventory: dict, catalog: dict, models
     """
 
     # check if input legal 
-    if type(inventory) != dict or type(catalog) != dict or type(models) != dict or type(count) != int or count <= 0 or type(model) != str or model not in models.keys():
-        return (0,0,0.00)
-    if type(count) != int or count <= 0:
+    if  model not in models.keys() or int(count) <= 0:
         return (0,0,0.00)
     
     # process def
@@ -212,7 +200,10 @@ if __name__ == "__main__":
             print("")
 
         elif str(choice) == str(0):                                                                             # exit
-            break                                                                                               
+            break 
+
+        else :                                                                                                  # if anything else
+            continue                                                                                              
 
 
         
