@@ -35,17 +35,21 @@ inventory = {
 # Place your API methods here. #
 ################################
 
-def get_model_cost(model, catalog, models):
-    """ return the cost of "model" by the request from "models" and price from "catalog" """
+def get_model_cost(model: str, catalog: dict, models: dict) -> float: 
+    """
+    return the cost of "model" by the request from "models" and price from "catalog"
+    """
     model_cost = 0
     part_req = models[model]
     for part_name, part_num in part_req.items():
         model_cost += float(f"{(catalog[part_name] * part_num):.2f}")
     return (model_cost)
 
-def can_build_one(model, inventory, models) :
-    """ return True if the stock of parts in "inventory" is able to build "model", 
-        or False if unable"""
+def can_build_one(model: str, inventory: dict, models: dict) -> bool:
+    """
+    return True if the stock of parts in "inventory" is able to build "model", 
+    or False if unable
+    """
     check_list = []                                 # list of flag to record if a part is able
     part_req = models[model]
     for part_name, part_num in part_req.items():
@@ -58,9 +62,11 @@ def can_build_one(model, inventory, models) :
     else:
         return (True)
     
-def build_one(model, inventory, catalog, models) :
-    """ if parts in "inventory" are able to build a "model", update "inventory" and return cost, 
-        if unable return 0.00 """
+def build_one(model: str, inventory: dict, catalog: dict, models: dict) -> float:
+    """
+    if parts in "inventory" are able to build a "model", update "inventory" and return cost, 
+    if unable return 0.00
+    """
     check_list = []                                 # list of flag to record if a part is able
     part_req = models[model]
     for part_name, part_num in part_req.items():
@@ -79,8 +85,10 @@ def build_one(model, inventory, catalog, models) :
         inventory[part_name] -= part_num                                # update inventory
     return (model_cost)
 
-def apply_discount(total):
-    """ return the price after discounted """
+def apply_discount(total: float) -> float:
+    """
+    return the price after discounted
+    """
     sale_amount = 0.00
     total = float(total)
     if total > 1500:
@@ -94,15 +102,17 @@ def apply_discount(total):
     sale_amount = float(f"{(total * (1-discount)):.2f}")
     return (sale_amount)
 
-def process_order(model, count, inventory, catalog, models):
-    """ try to built "model" as more as possible, 
-        update "inventory", 
-        return the number of built unit, the number of unit on backorder, and total cost"""
+def process_order(model: str, count: int, inventory: dict, catalog: dict, models: dict) -> tuple[int, int, float]:
+    """ 
+    try to built "model" as more as possible, 
+    update "inventory", 
+    return the number of built unit, the number of unit on backorder, and total cost
+    """
     consed_num = 0 
     unconsed_num = 0
-    try_num = int(count)
+    try_num = int(count)                        # try to built full order first
     part_req = models[model]
-    check = True                            # mark of if_can_build_or_not
+    check = True                                # mark of if_can_build_or_not
     while check:
         temp_stock = inventory.copy()           # set a temp 
         model_cost = 0
@@ -110,9 +120,9 @@ def process_order(model, count, inventory, catalog, models):
             if temp_stock[part_req_name] >= part_req[part_req_name] * try_num:
                 temp_stock[part_req_name] -= part_req[part_req_name] * try_num
                 model_cost += catalog[part_req_name] * part_req_num * try_num
-                check = True                        # mark as able
+                check = True                    # mark as able
             else:
-                check = False                       # mark as unable
+                check = False                   # mark as unable
                 model_cost = 0
                 break
         if check :                              # check if can build
@@ -121,7 +131,7 @@ def process_order(model, count, inventory, catalog, models):
             inventory.update(temp_stock)        # update inventory
             break
         else :                       
-            try_num -=1                         # try partial 
+            try_num -=1                         # try to build partial order
             check = True
     model_cost = float(f"{model_cost:.2f}")
     return (consed_num,unconsed_num,model_cost)
@@ -144,7 +154,7 @@ while True:                                                                     
 
     elif str(choice) == str(2):                                                                             # Attempt order
         model_name = input("Please enter a model number: ")
-        count = input("Please enter the number of " + model_name + " units you would like: ")
+        count = int(input("Please enter the number of " + model_name + " units you would like: "))
         cons_result = process_order(model_name, count, inventory, PRICE_CATALOG, MODELS)
         discount = apply_discount(cons_result[2])
         print ("\nAttempting to order models...\n\n" + model_name + " order details.")

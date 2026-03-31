@@ -1,5 +1,5 @@
 
-# set origional list
+# set original list
 product_name = ["motor", "sensor", "frame", "cpu"]
 product_price = [49.99, 15.75, 120.00, 85.50]
 product_num = []

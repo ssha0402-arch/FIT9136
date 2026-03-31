@@ -10,12 +10,8 @@ models = {
     "R3": [3, 6, 2, 7, 7, 4, 4, 4],
     "R4": [1, 6, 3, 6, 4, 5, 2, 7]
 }
-# fix test 2.10
-seq_model = []
-for model in models.keys():
-    seq_model.append(model)
 
-
+# dict to record cost
 model_cost_amount = {
     "R1": 0,
     "R2": 0,
@@ -70,7 +66,7 @@ for order in queue:
             unconsed_num = int(model_num) - int(try_num)
             able_order.append((model_name, consed_num))              # update able order with consed_num
             backorder.append((model_name, unconsed_num))          # update unable order with remaining number
-            part_stock[:] = temp_stock                              # update stock
+            part_stock[:] = temp_stock.copy()                              # update stock
             break
             
     if try_num == 0:                                                # if total not able
@@ -78,14 +74,15 @@ for order in queue:
 
 
 
-
+# fix test 2.10
+seq_model = []
+for model in models.keys():
+    seq_model.append(model)
 
 # dict for consumption unit
 cons_unit = {}
 for model in seq_model:
     cons_unit[model] = 0
-# fix test 2.10
-
 for order in able_order:
     model_name = order[0]
     model_num = order[1]
@@ -95,14 +92,10 @@ for order in able_order:
 uncons_unit = {}
 for model in seq_model:
     uncons_unit[model] = 0
-# fix test 2.10
-
 for order in backorder:
     model_name = order[0]
     model_num = order[1]
     uncons_unit[model_name] += model_num
-
-
 
 
 
