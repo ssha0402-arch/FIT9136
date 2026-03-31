@@ -1,0 +1,41 @@
+def total(lst):
+    total_sum = 0
+    for elem in lst:
+        total_sum += elem
+    return total_sum
+        
+def list_names():
+    lst = []
+    for person in group: # this is NOT Python code, and this is where you ask each member for the appropriate information.
+        x = person.middle_name()
+        if x == None: # We will use the keyword 'is' in the future (i.e., Week 6).
+            x = person.favourite_animal()[:8]
+        lst += [x]
+    return lst
+        
+def get_letter_position(letter):
+    count = 1
+    alphabet = '!abcdefghijklmnopqrstuvwxyz'   
+    while count <= 20:
+        if alphabet[count] == letter:
+            return count
+        count += 1
+    return 0
+
+def get_letter(string):
+    count = 0
+    for letter in string:
+        count += 1
+    count //= 2
+    i = 0
+    while count >= 0:
+        i += 1
+        count -= 1
+    return get_letter_position(string[i])
+    
+def main():
+    num_lst = []
+    names = list_names()
+    for name in names:
+        num_lst += [get_letter(name)]
+    return total(num_lst)

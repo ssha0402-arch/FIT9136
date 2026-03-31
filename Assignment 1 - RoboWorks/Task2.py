@@ -45,7 +45,7 @@ for order in queue:
     model_num = order[1]
     consed_num = 0 
     unconsed_num = 0
-    try_num = int(model_num)
+    try_num = int(model_num)                                        # try to built full order first
     part_req = models[model_name]
     while try_num != 0:
         temp_stock = part_stock.copy()                              # set a temp 

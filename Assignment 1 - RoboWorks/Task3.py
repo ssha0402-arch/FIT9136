@@ -39,17 +39,34 @@ def get_model_cost(model: str, catalog: dict, models: dict) -> float:
     """
     return the cost of "model" by the request from "models" and price from "catalog"
     """
+
+    # check if input legal 
+    if type(catalog) != dict or type(models) != dict:
+        return (0.00)
+    if type(model) != str or model not in models.keys():
+        return (0.00)
+    
+    # process def
     model_cost = 0
     part_req = models[model]
     for part_name, part_num in part_req.items():
         model_cost += float(f"{(catalog[part_name] * part_num):.2f}")
     return (model_cost)
 
+
 def can_build_one(model: str, inventory: dict, models: dict) -> bool:
     """
     return True if the stock of parts in "inventory" is able to build "model", 
     or False if unable
     """
+
+    # check if input legal
+    if type(inventory) != dict or type(models) != dict:
+        return (False)
+    if type(model) != str or model not in models.keys():
+        return (False)
+
+    # process def    
     check_list = []                                 # list of flag to record if a part is able
     part_req = models[model]
     for part_name, part_num in part_req.items():
@@ -62,11 +79,20 @@ def can_build_one(model: str, inventory: dict, models: dict) -> bool:
     else:
         return (True)
     
+
 def build_one(model: str, inventory: dict, catalog: dict, models: dict) -> float:
     """
     if parts in "inventory" are able to build a "model", update "inventory" and return cost, 
     if unable return 0.00
     """
+
+    # check if input legal 
+    if type(inventory) != dict or type(catalog) != dict or type(models) != dict:
+        return (0.00)
+    if type(model) != str or model not in models.keys():
+        return (0.00)
+       
+    # process def
     check_list = []                                 # list of flag to record if a part is able
     part_req = models[model]
     for part_name, part_num in part_req.items():
@@ -76,19 +102,25 @@ def build_one(model: str, inventory: dict, catalog: dict, models: dict) -> float
             check_list.append(0)                    # mark as unable
     if 0 in check_list:                             # if any part marked unable 
         return (0.00)
-    
-    # if avriable to build
+        # if avriable to build
     model_cost = 0                                  
     part_req = models[model]
     for part_name, part_num in part_req.items():
         model_cost += float(f"{(catalog[part_name] * part_num):.2f}")
-        inventory[part_name] -= part_num                                # update inventory
+        inventory[part_name] -= part_num            # update inventory
     return (model_cost)
+
 
 def apply_discount(total: float) -> float:
     """
     return the price after discounted
     """
+
+    # check if input legal 
+    if type(total) != float and type(total) != int :
+        return(0.00)
+    
+    # process def
     sale_amount = 0.00
     total = float(total)
     if total > 1500:
@@ -102,12 +134,21 @@ def apply_discount(total: float) -> float:
     sale_amount = float(f"{(total * (1-discount)):.2f}")
     return (sale_amount)
 
+
 def process_order(model: str, count: int, inventory: dict, catalog: dict, models: dict) -> tuple[int, int, float]:
     """ 
     try to built "model" as more as possible, 
     update "inventory", 
     return the number of built unit, the number of unit on backorder, and total cost
     """
+
+    # check if input legal 
+    if type(inventory) != dict or type(catalog) != dict or type(models) != dict or type(count) != int or count <= 0 or type(model) != str or model not in models.keys():
+        return (0,0,0.00)
+    if type(count) != int or count <= 0:
+        return (0,0,0.00)
+    
+    # process def
     consed_num = 0 
     unconsed_num = 0
     try_num = int(count)                        # try to built full order first
@@ -141,37 +182,37 @@ def process_order(model: str, count: int, inventory: dict, catalog: dict, models
 # Place your CLI code and methods here #
 ########################################
 
+if __name__ == "__main__":
+    while True:                                                                                                 # keep working
 
-while True:                                                                                                 # keep working
+        print ("1) Show models and costs\n2) Attempt order\n3) Show inventory\n0) Exit\n")                      # menu
+        choice = input ("Please enter an integer between (0-3): ")
 
-    print ("1) Show models and costs\n2) Attempt order\n3) Show inventory\n0) Exit\n")                      # menu
-    choice = input ("Please enter an integer between (0-3): ")
+        if str(choice) == str(1):                                                                               # Show models and costs
+            for model_name, model_req in MODELS.items():
+                print(model_name + ": $" + str(f"{get_model_cost(model_name, PRICE_CATALOG, MODELS):.2f}"))
+            print("")
 
-    if str(choice) == str(1):                                                                               # Show models and costs
-        for model_name, model_req in MODELS.items():
-            print(model_name + ": $" + str(f"{get_model_cost(model_name, PRICE_CATALOG, MODELS):.2f}"))
-        print("")
+        elif str(choice) == str(2):                                                                             # Attempt order
+            model_name = input("Please enter a model number: ")
+            count = int(input("Please enter the number of " + model_name + " units you would like: "))
+            cons_result = process_order(model_name, count, inventory, PRICE_CATALOG, MODELS)
+            discount = apply_discount(cons_result[2])
+            print ("\nAttempting to order models...\n\n" + model_name + " order details.")
+            print ("Units built: " + str(cons_result[0]))
+            print ("Units on backorder: " + str(cons_result[1]))
+            print ("\nSubtotal: $" + str(f"{cons_result[2]:.2f}"))
+            print ("Discount (dollars): $" + str(f"{(float(cons_result[2])-discount):.2f}"))
+            print ("Total: $" + str(discount)+"\n")
 
-    elif str(choice) == str(2):                                                                             # Attempt order
-        model_name = input("Please enter a model number: ")
-        count = int(input("Please enter the number of " + model_name + " units you would like: "))
-        cons_result = process_order(model_name, count, inventory, PRICE_CATALOG, MODELS)
-        discount = apply_discount(cons_result[2])
-        print ("\nAttempting to order models...\n\n" + model_name + " order details.")
-        print ("Units built: " + str(cons_result[0]))
-        print ("Units on backorder: " + str(cons_result[1]))
-        print ("\nSubtotal: $" + str(f"{cons_result[2]:.2f}"))
-        print ("Discount (dollars): $" + str(f"{(float(cons_result[2])-discount):.2f}"))
-        print ("Total: $" + str(discount)+"\n")
+        elif str(choice) == str(3):                                                                             # Show inventory
+            print ("Current inventory:\n")
+            for part_name, part_num in inventory.items():
+                print (part_name + ": " + str(part_num))
+            print("")
 
-    elif str(choice) == str(3):                                                                             # Show inventory
-        print ("Current inventory:\n")
-        for part_name, part_num in inventory.items():
-            print (part_name + ": " + str(part_num))
-        print("")
-
-    elif str(choice) == str(0):                                                                             # exit
-        break                                                                                               
+        elif str(choice) == str(0):                                                                             # exit
+            break                                                                                               
 
 
-    
+        
