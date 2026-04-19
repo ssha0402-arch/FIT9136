@@ -1,7 +1,7 @@
 robot_id,battery_level,max_load,zone
-R1,41,15,B
-R2,50,10,D
-R3,46,10,A
+R1,4111,15,B
+R2,50,-10,D
+R3,46,10,A2
 R4,95,11,D
 R5,81,9,C
 R6,85,9,B

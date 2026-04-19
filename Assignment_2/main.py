@@ -59,8 +59,6 @@ def read_robots(robots_path:str)->list:
             if None not in row_list_checked:                        # check if temp list legal 
                 for column_num, row_value in enumerate(row_list_checked):
                     out_list[column_num].append(row_value)          # write value in out_list
-
-
     return out_list
 
 def read_destinations(destinations_path:str)->list:
@@ -102,7 +100,6 @@ def read_destinations(destinations_path:str)->list:
             if None not in row_list_checked:                        # check if temp list legal 
                 for column_num, row_value in enumerate(row_list_checked):
                     out_list[column_num].append(row_value)          # write value in out_list
-
     return out_list
 
 
@@ -145,11 +142,10 @@ def read_packages(packages_path:str)->list:
             if None not in row_list_checked:                        # check if temp list legal 
                 for column_num, row_value in enumerate(row_list_checked):
                     out_list[column_num].append(row_value)          # write value in out_list
-
     return out_list
 
 
-def read_tasks(tasks_path:str)->list:
+def read_tasks(tasks_path:str, destination_ids:list, package_ids:list)->list:
     """
     This function should take a CSV file containing information on the tasks 
     and return an aligned list for each of the fields contained in the CSV file, 
@@ -168,9 +164,26 @@ def read_tasks(tasks_path:str)->list:
             for column_num, column_name in enumerate(title_list):
                 
                 ### VALUE CHECK ###
-                if True:                                            ### HERE SHOULD HAVE A CHECK ###
-                    row_value = str(row_list[column_num])
-                    row_list_checked[column_num]=row_value
+                if column_name == "status":                         # VALUE check for "status"
+                    if str(row_list[column_num]) == "pending" or str(row_list[column_num]) == "complete":
+                        row_list_checked[column_num]=row_list[column_num]
+                    else:
+                        error_dict[column_name]=row_list[column_num]
+                elif column_name == "source_id":                    # VALUE check for "source_id"
+                    if row_list[column_num] in destination_ids:
+                        row_list_checked[column_num]=row_list[column_num]
+                    else:
+                        error_dict[column_name]=row_list[column_num]
+                elif column_name == "target_id":                    # VALUE check for "target_id"
+                    if row_list[column_num] in destination_ids:
+                        row_list_checked[column_num]=row_list[column_num]
+                    else:
+                        error_dict[column_name]=row_list[column_num]
+                elif column_name == "package_id":                   # VALUE check for "package_id"
+                    if row_list[column_num] in package_ids:
+                        row_list_checked[column_num]=row_list[column_num]
+                    else:
+                        error_dict[column_name]=row_list[column_num]
                 ### VALUE CHECK ###
 
                 else:                                               # Value no need to check
@@ -182,7 +195,6 @@ def read_tasks(tasks_path:str)->list:
             if None not in row_list_checked:                        # check if temp list legal 
                 for column_num, row_value in enumerate(row_list_checked):
                     out_list[column_num].append(row_value)          # write value in out_list
-
     return out_list
 
 
@@ -190,10 +202,7 @@ def read_tasks(tasks_path:str)->list:
 
 def is_task_executable(task_id, package_ids, package_weights, robot_ids, max_loads, robot_zones, destination_ids, destination_zones, task_ids, source_ids, target_ids, task_package_ids):
     """
-    task_id         :   package_ids         :       package_weights     :
-    robot_ids       :   max_loads           :       robot_zones         :
-    destination_ids :   destination_zones   :       task_ids            :
-    source_ids      :   target_ids          :       task_package_ids    :
+
     """
     return 0
 
@@ -210,6 +219,10 @@ if __name__ == "__main__":
     print(read_destinations ("Assignment_2/Task1CSV26.04.14/destinations.csv"))
     print("packages")
     print(read_packages     ("Assignment_2/Task1CSV26.04.14/packages.csv"))
-    print("tasks")
-    print(read_tasks        ("Assignment_2/Task1CSV26.04.14/tasks.csv"))
+    # print("tasks")
+    print(read_tasks(
+        "Assignment_2/Task1CSV26.04.14/tasks.csv",
+        read_destinations("Assignment_2/Task1CSV26.04.14/destinations.csv")[0],
+        read_packages("Assignment_2/Task1CSV26.04.14/packages.csv")[0]
+    ))
 
