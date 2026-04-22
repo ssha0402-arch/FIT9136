@@ -1,5 +1,7 @@
 import sys
 
+# Write your functions here.import sys
+
 # Write your functions here.
 
 def read_robots(robots_path:str)->list:
@@ -195,7 +197,7 @@ def read_tasks(tasks_path:str, destination_ids:list, package_ids:list)->list:
                     out_list[column_num].append(row_value)          # write value in out_list
     return out_list
 
-def is_task_executable(task_id:str, package_ids, package_weights, robot_ids, max_loads, robot_zones, destination_ids, destination_zones, task_ids, source_ids, target_ids, task_package_ids):
+def is_task_executable(task_id:str, package_ids:list[str], package_weights:list[float], robot_ids:list[str], max_loads:list[float], robot_zones:list[str], destination_ids:list[str], destination_zones:list[str], task_ids:list[str], source_ids:list[str], target_ids:list[str], task_package_ids:list[str])->bool:
     """
     task_id is required to fill
     package_ids         package_weights                                         are from read_packages
@@ -238,7 +240,7 @@ def write_feasability_report(report_path:str,task_ids:list,results:list[bool]):
         report.write(report_)
     return 0
 
-def main(robots_path, destinations_path, packages_path, tasks_path, report_path):
+def main(robots_path:str, destinations_path:str, packages_path:str, tasks_path:str, report_path:str)-> bool:
     robots_data         = read_robots(robots_path)
     destinations_data   = read_destinations(destinations_path)
     packages_data       = read_packages(packages_path)
@@ -256,6 +258,11 @@ def main(robots_path, destinations_path, packages_path, tasks_path, report_path)
 
 
 
+
+
+
+
+
 if __name__ == "__main__":
     # Write your test code here.
     robots_path         = "Assignment_2/task_csv/robots.csv"
@@ -264,4 +271,3 @@ if __name__ == "__main__":
     tasks_path          = "Assignment_2/task_csv/tasks.csv"
     report_path         = "Assignment_2/feasibility_report.txt"
     main(robots_path, destinations_path, packages_path, tasks_path, report_path)
-
