@@ -38,7 +38,11 @@
 
 
 
-names = ["Tom", "Amy", "Bob"]
-ages = [18, 20, 19]
+# names = ["Tom", "Amy", "Bob"]
+# ages = [18, 20, 19]
 
-print(list(zip(names, ages)))
+# print(list(zip(names, ages)))
+x = [0,1,2,1/3,5/2,3]
+for t in x:
+    f = ((t-1)**3)*(20*t**3-104*t**2+143*t-19)+20
+    print(t,f)

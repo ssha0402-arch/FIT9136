@@ -33,7 +33,9 @@ def read_robots(robots_path:str)->list[dict]:
         row_checked = {}
         error_dict = {}
         for column_name, value in row.items():
-
+            if True:
+                continue
+            
                 # ### VALUE CHECK ###
                 # if column_name == "battery_level" :                 # VALUE check for "battery_level"
                 #     try:
@@ -63,10 +65,9 @@ def read_robots(robots_path:str)->list[dict]:
                 #     except:
                 #             error_dict[column_name] = value
                 # ### VALUE CHECK ###
-
-                else:                                               # Value no need to check
-                    value = str(value)
-                    row_checked[column_name] = value
+            else:                                               # Value no need to check
+                value = str(value)
+                row_checked[column_name] = value
 
         if error_dict == {}:
             out_list.append(row_checked)                            # 
@@ -149,7 +150,7 @@ def read_packages(packages_path:str)->list[dict]:
                 print("Warning:", (title_list[0].split("_"))[0].capitalize(), str(row[title_list[0]]),"has invalid",str(error_item),"("+str(error_value)+").",file=sys.stderr)
     return out_list
 
-def read_tasks(tasks_path:str)->list[dict]:
+def read_tasks(tasks_path:str, destination_ids:dict, package_ids:dict)->list[dict]:
     """
     This function takes a csv file path and returns a list of dict
     every value will be checked, if any value in a row is illegal, whole row won't be return
