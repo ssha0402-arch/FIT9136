@@ -169,12 +169,7 @@ def read_tasks(tasks_path:str, destination_ids:list, package_ids:list)->list:
                         row_list_checked[column_num]=row_list[column_num]
                     else:
                         error_dict[column_name]=row_list[column_num]
-                elif column_name == "source_id":                    # VALUE check for "source_id"
-                    if row_list[column_num] in destination_ids:
-                        row_list_checked[column_num]=row_list[column_num]
-                    else:
-                        error_dict[column_name]=row_list[column_num]
-                elif column_name == "target_id":                    # VALUE check for "target_id"
+                elif column_name in ["source_id","target_id"]:                    # VALUE check for "source_id" and "target_id"
                     if row_list[column_num] in destination_ids:
                         row_list_checked[column_num]=row_list[column_num]
                     else:
@@ -254,20 +249,12 @@ def main(robots_path:str, destinations_path:str, packages_path:str, tasks_path:s
     write_feasability_report(report_path,tasks_data[0],result)
     return 0
 
-
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
     # Write your test code here.
-    robots_path         = "Assignment_2/task_csv/robots.csv"
+    # robots_path         = "Assignment_2/task_csv/robots.csv"
     packages_path       = "Assignment_2/task_csv/packages.csv"
-    destinations_path   = "Assignment_2/task_csv/destinations.csv"
-    tasks_path          = "Assignment_2/task_csv/tasks.csv"
-    report_path         = "Assignment_2/feasibility_report.txt"
-    main(robots_path, destinations_path, packages_path, tasks_path, report_path)
+    # destinations_path   = "Assignment_2/task_csv/destinations.csv"
+    # tasks_path          = "Assignment_2/task_csv/tasks.csv"
+    # report_path         = "Assignment_2/feasibility_report.txt"
+    # main(robots_path, destinations_path, packages_path, tasks_path, report_path)
+    print(read_packages(packages_path))
