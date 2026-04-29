@@ -186,6 +186,67 @@ def read_tasks(tasks_path:str, destination_ids:list, package_ids:list)->list[dic
                 print("Warning:", (title_list[0].split("_"))[0].capitalize(), str(row[title_list[0]]),"has invalid",str(error_item),"("+str(error_value)+").",file=sys.stderr)
     return out_list
 
+def read_schedules(schedules_path:str,robot_ids:list,task_ids:list)->list[dict]:
+    """
+    """
+    out_list = []
+    with open(schedules_path,"r") as fileref:
+        file_lines = fileref.readlines()
+        for row_num,row in enumerate(file_lines):
+            line = list(row.strip().split(","))
+            if len(line) < 3 :
+                print("Warning, line",str(row_num), "is too short.",file=sys.stderr)
+                continue
+            error_dict = {}
+            line_checked = []
+            if re.fullmatch(pattern_id,line[0]):
+                line_checked.append(line[0])
+            else:
+                error_dict["schedule_id"]=line[0]
+            if re.fullmatch(pattern_id,line[1]) and line[1] in robot_ids:
+                line_checked.append(line[1])
+            else:
+                error_dict["robot_id"]=line[1]
+            for task_num,task_id in enumerate(line[2:]):
+                if re.fullmatch(pattern_id,task_id) and task_id in task_ids :
+                    line_checked.append(task_id)
+                else:
+                    error_dict["task"+str(task_num)]=task_id
+            if error_dict=={}:
+                out_list.append(dict(schedule_id=line[0],robot_id=line[1],task_ids=line[2:]))
+            else:
+                for err_name,err_value in error_dict.items():
+                    if err_name == "schedule_id":
+                        print("Warning: invalid schedule_id","("+str(err_value)+").",file=sys.stderr)
+                    elif err_name == "robot_id":
+                        print("Warning: invalid robot_id","("+str(err_value)+").",file=sys.stderr)
+                    else:
+                        print("Warning: invalid task_id","("+str(err_value)+").",file=sys.stderr)
+        return(out_list)
+
+def read_distances(distances_path:str)->list[list]:
+    """
+    """
+    with open(distances_path,"r") as fileref:
+        out_list=[]
+        lines = fileref.readlines()
+        for line in lines:
+            row = []
+            for value in list(line.strip().split(",")):
+                row.append(float(value))
+            out_list.append(row)
+        return(out_list)
+    
+
+
+
+
+
+
+
+
+
+
 # if __name__ == "__main__":
 #     # Write your test code here.
 #     print("robots")
